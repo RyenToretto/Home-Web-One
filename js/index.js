@@ -1,4 +1,4 @@
-/**** 开机动画 ****/
+var isOkay = false;
 var images = [
     "04038.jpg", "48812.jpg",
     "about1.jpg", "about2.jpg", "about3.jpg", "about4.jpg",
@@ -11,7 +11,7 @@ var images = [
     "plus_row.png", "robot.png", "tata.png", "team.png", "team1.png",
     "worksimg1.jpg", "worksimg2.jpg", "worksimg3.jpg", "worksimg4.jpg",  "zoomico.png"
 ];
-
+/**** 开机动画 ****/
 function LoadingAnimation() {
     var upMask = document.getElementById("up_mask");
     var downMask = document.getElementById("down_mask");
@@ -42,6 +42,9 @@ function LoadingAnimation() {
     upMask.addEventListener("transitionend", function () {
         upMask.remove();
         downMask.remove();
+        isOkay = true;
+        screenSwitch(1, callBack);         // 切换到第 1 屏
+        bindSwitchPhotos();                // 轮播图 逻辑
     }, false);
 };
 
@@ -319,7 +322,7 @@ function hoverBubble() {
 var callBack = {
     "ulContent": document.getElementById("ul_content"),
     "wheelup": function () {    // 滚轮 上滑上一屏
-        if(this.ulContent.screenindex > 1){
+        if(isOkay && this.ulContent.screenindex > 1){
             screenSwitch(this.ulContent.screenindex-1, callBack);
         };
     },
@@ -327,7 +330,7 @@ var callBack = {
         if(!this.ulContent.screenindex){
             this.ulContent.screenindex = 1;
         };
-        if(this.ulContent.screenindex < document.querySelectorAll("#header_nav>ul>li").length){
+        if(isOkay && this.ulContent.screenindex < document.querySelectorAll("#header_nav>ul>li").length){
             screenSwitch(this.ulContent.screenindex+1, callBack);
         };
     },
@@ -449,6 +452,5 @@ window.onload = function(){
     navClick();     				   // 导航点击 切屏
     pointClick();                      // 小圆点点击 切屏
     bindScrollEvent(callBack); 		   // 滚轮 切屏
-    bindSwitchPhotos();                // 轮播图 逻辑
     hoverBubble();                     // 悬浮气泡
 };
