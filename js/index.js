@@ -43,7 +43,10 @@ function LoadingAnimation() {
         upMask.remove();
         downMask.remove();
         isOkay = true;
-        screenSwitch(1, callBack);         // 切换到第 1 屏
+        if(upMask.style.height === "0px"){
+            screenSwitch(1, callBack);         // 切换到第 1 屏
+            console.log("haha*************");
+        };
         bindSwitchPhotos();                // 轮播图 逻辑
     }, false);
 };
