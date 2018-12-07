@@ -468,10 +468,12 @@ var callBack = {
     },
 };
 
+window.addEventListener("DOMContentLoaded", function () {
+    LoadingAnimation();    // 开机动画
+});
 window.onload = function(){
     screensHeightInit();    // lis 屏 初始化 height
     window.onresize = windowResize;    // 处理 浏览器缩放
-    LoadingAnimation();    // 开机动画
     musicBind();    // 音乐播放
     screenSwitch(1, callBack);    // 屏幕切到第 1 屏
     
