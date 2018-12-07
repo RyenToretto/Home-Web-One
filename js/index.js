@@ -44,10 +44,9 @@ function LoadingAnimation() {
         downMask.remove();
         isOkay = true;
         if(upMask.style.height === "0px"){
-            screenSwitch(1, callBack);         // 切换到第 1 屏
-            console.log("haha*************");
+            screenSwitch(1, callBack);    // 切换到第 1 屏
         };
-        bindSwitchPhotos();                // 轮播图 逻辑
+        bindSwitchPhotos();    // 轮播图 逻辑
     }, false);
 };
 
@@ -77,7 +76,7 @@ function screensHeightInit(){
 
 /**** 屏幕切换 函数 ****/
 function screenSwitch(navindex, callBack){
-	// 对应的 up_mask 显示
+    // 对应的 up_mask 显示
     var lis = document.querySelectorAll("#header_nav>ul>li");
     for(var i=0; i<lis.length; i++){
         removeClass(lis[i].querySelector(".up_mask"), "active");
@@ -86,13 +85,13 @@ function screenSwitch(navindex, callBack){
     
 
     // 切换小圆点
-	var points = document.querySelectorAll("#point_nav>li");
-	for(var j=0; j<points.length; j++){
-		removeClass(points[j], "active");
-	};
-	addClass(points[navindex-1], "active");
-	
-	// 小箭头移动到对应的位置
+    var points = document.querySelectorAll("#point_nav>li");
+    for(var j=0; j<points.length; j++){
+        removeClass(points[j], "active");
+    };
+    addClass(points[navindex-1], "active");
+
+    // 小箭头移动到对应的位置
     var header = document.getElementById("header");
     var homePage = document.querySelector("#header_nav>ul>li:nth-child("+navindex+") .green_words");
     var arrow = document.getElementById("arrow");
@@ -101,7 +100,7 @@ function screenSwitch(navindex, callBack){
                         homePage.parentElement.offsetWidth/2-
                         arrow.offsetWidth/2 + "px";
     
-	// 屏幕切换
+    // 屏幕切换
     var headerBox = document.getElementById("header_box");
     var ulContent = document.getElementById("ul_content");
     ulContent.style.top = -(navindex-1)*(document.documentElement.clientHeight - headerBox.offsetHeight)+"px";
@@ -447,13 +446,13 @@ var callBack = {
 };
 
 window.onload = function(){
-    screensHeightInit();  			   // lis 屏 初始化 height
+    screensHeightInit();    // lis 屏 初始化 height
     window.onresize = windowResize;    // 处理 浏览器缩放
-    LoadingAnimation();                // 开机动画
-    screenSwitch(1, callBack);  				   // 屏幕切到第 1 屏
+    LoadingAnimation();    // 开机动画
+    screenSwitch(1, callBack);    // 屏幕切到第 1 屏
     
-    navClick();     				   // 导航点击 切屏
-    pointClick();                      // 小圆点点击 切屏
-    bindScrollEvent(callBack); 		   // 滚轮 切屏
-    hoverBubble();                     // 悬浮气泡
+    navClick();    // 导航点击 切屏
+    pointClick();    // 小圆点点击 切屏
+    bindScrollEvent(callBack);    // 滚轮 切屏
+    hoverBubble();    // 悬浮气泡
 };

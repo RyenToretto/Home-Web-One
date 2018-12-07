@@ -11,7 +11,7 @@ function removeClass(ele, className){
         var reg = new RegExp("\\b" + className + "\\b");
         var classes = ele.className;
         ele.className = classes.replace(reg, "");
-
+        
         if (/^\s*$/g.test(ele.className)) {
             ele.removeAttribute("class");
         };
@@ -89,7 +89,7 @@ function bindScrollEvent(callBack){
     };
 };
 
-//                创建 画布的width  画布的height  背景颜色 父元素
+/**** 创建 画布的width  画布的height  背景颜色 父元素 ****/
 function createCanvasTo(canvasWidth, canvasHeight, parentObj, bgColor){
     var myCanvas = document.createElement("canvas");
     myCanvas.width = canvasWidth;

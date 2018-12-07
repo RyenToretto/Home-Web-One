@@ -545,10 +545,10 @@ body #outer_box #content_box #ul_content > li > .realContent #abouts > div > ul 
   position: absolute;
   width: 200%;
   height: 200%;
-  transition: 1s top,
-                                            1s right,
-                                            1s bottom,
-                                            1s left;
+  transition:   1s top,
+                1s right,
+                1s bottom,
+                1s left;
 }
 body #outer_box #content_box #ul_content > li > .realContent #abouts > div > ul > li:nth-child(1) > img {
   top: 0;
