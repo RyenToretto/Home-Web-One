@@ -74,22 +74,34 @@ function screensHeightInit(){
     };
 };
 
+function musicBind() {
+    var musicBox = document.getElementById("music_box");
+    var myMusic = document.getElementById("my_music");
+    musicBox.addEventListener("click", function(){
+        if(myMusic.paused){
+            myMusic.play();
+        }else{
+            myMusic.pause();
+            myMusic.currentTime = 0;
+        };
+    }, false);
+};
+
 /**** 屏幕切换 函数 ****/
 function screenSwitch(navindex, callBack){
+    // 切换小圆点
+    var points = document.querySelectorAll("#point_nav>li");
+    for(var j=0; j<points.length; j++){
+        removeClass(points[j], "active");
+    };
+    addClass(document.querySelector("#point_nav>li:nth-child("+navindex+")"), "active");
+    
     // 对应的 up_mask 显示
     var lis = document.querySelectorAll("#header_nav>ul>li");
     for(var i=0; i<lis.length; i++){
         removeClass(lis[i].querySelector(".up_mask"), "active");
     };
     addClass(document.querySelector("#header_nav>ul>li:nth-child("+navindex+")>div:first-child"), "active");
-    
-
-    // 切换小圆点
-    var points = document.querySelectorAll("#point_nav>li");
-    for(var j=0; j<points.length; j++){
-        removeClass(points[j], "active");
-    };
-    addClass(points[navindex-1], "active");
 
     // 小箭头移动到对应的位置
     var header = document.getElementById("header");
@@ -277,47 +289,56 @@ function hoverBubble() {
     var teams = document.getElementById("teams");
     var lis = teams.querySelectorAll("li");
     
-    function addCanvas(theLi){
-        theLi.myCanvas = createCanvasTo(theLi.offsetWidth, theLi.offsetHeight, theLi);
-        theLi.myCanvas.style.position = "absolute";
-        theLi.myCanvas.style.top = "0";
-        theLi.myCanvas.style.left = "0";
-    
-        theLi.myCanvas.bubble = new MyBubble(theLi.myCanvas);
-        theLi.myCanvas.pen = theLi.myCanvas.getContext("2d");
-        
-        theLi.myCanvas.bubble.createBubble(8);    // 添加气泡
-        theLi.myCanvas.bubble.show();    // 绘制气泡
-        theLi.myCanvas.bubble.raiseBubble();    // 气泡上升
-    };
-    
-    function stopBubbles(theLi){
-        theLi.myCanvas.bubble.clearTimers();
-        theLi.myCanvas.bubble.clearArr();
-        theLi.myCanvas.pen.clearRect(0, 0, theLi.myCanvas.width, theLi.myCanvas.height);
-        theLi.myCanvas.remove();
-    };
-    
     for(var i=0; i<lis.length; i++){
         lis[i].addEventListener("mouseenter", function (){
             for(var j=0; j<lis.length; j++){
                 lis[j].style.opacity = "0.5";
             };
             this.style.opacity = "1";    // 排他 高亮
-    
-            addCanvas(this);    // 开启 气泡特效
+            
+            if(!teams.myCanvas){
+                addCanvas(teams, teams.offsetWidth/4, teams.offsetHeight);    // 开启 气泡特效
+            };
+            teams.myCanvas.style.left = this.getBoundingClientRect().left -
+                                        teams.getBoundingClientRect().left + "px";    // 移动到 悬浮位置
         }, false);
-    
         lis[i].addEventListener("mouseleave", function (){
-            stopBubbles(this);    // 关闭 气泡特效
+            teams.myCanvas.bubble.clearArr();
         }, false);
     };
     
+    // 当移出 ul 时，停止并删除气泡画布
     teams.addEventListener("mouseleave", function (){
         for(var j=0; j<lis.length; j++){
             lis[j].style.opacity = "1";    // 全部 高亮
         };
+        stopBubbles(teams);
     }, false);
+    
+    // 创建带气泡特效的 canvas
+    function addCanvas(ele, canvasWidth, canHeight){
+        ele.myCanvas = createCanvasTo(canvasWidth, canHeight, ele);
+        ele.myCanvas.style.position = "absolute";
+        ele.myCanvas.style.top = "0";
+        ele.myCanvas.style.left = "0";
+        
+        // 开启气泡特效
+        ele.myCanvas.bubble = new MyBubble(ele.myCanvas);
+        ele.myCanvas.pen = ele.myCanvas.getContext("2d");
+        
+        ele.myCanvas.bubble.createBubble(8);    // 添加气泡
+        ele.myCanvas.bubble.show();    // 绘制气泡
+        ele.myCanvas.bubble.raiseBubble();    // 气泡上升
+    };
+    
+    // 停止并删除气泡画布
+    function stopBubbles(ele){
+        ele.myCanvas.bubble.clearTimers();
+        ele.myCanvas.bubble.clearArr();
+        ele.myCanvas.pen.clearRect(0, 0, ele.myCanvas.width, ele.myCanvas.height);
+        ele.myCanvas.remove();
+        ele.myCanvas = null;
+    };
 };
 
 /**** 回调函数 ****/
@@ -325,15 +346,15 @@ var callBack = {
     "ulContent": document.getElementById("ul_content"),
     "wheelup": function () {    // 滚轮 上滑上一屏
         if(isOkay && this.ulContent.screenindex > 1){
-            screenSwitch(this.ulContent.screenindex-1, callBack);
+            screenSwitch(+this.ulContent.screenindex-1, callBack);
         };
     },
     "wheeldown": function () {    // 滚轮 下滑下一屏
         if(!this.ulContent.screenindex){
             this.ulContent.screenindex = 1;
         };
-        if(isOkay && this.ulContent.screenindex < document.querySelectorAll("#header_nav>ul>li").length){
-            screenSwitch(this.ulContent.screenindex+1, callBack);
+        if(isOkay && (this.ulContent.screenindex < document.querySelectorAll("#header_nav>ul>li").length)){
+            screenSwitch(+this.ulContent.screenindex+1, callBack);
         };
     },
     // 第 1 屏动画
@@ -440,7 +461,7 @@ var callBack = {
         var fiveTitle = document.getElementById("five_title");
         var fiveText = document.getElementById("five_text");
     
-        fiveTitle.style.left = "-150px";
+        fiveTitle.style.left = "-150px";    // 最好用 transform
         fiveText.style.left = "150px";
     },
 };
@@ -449,6 +470,7 @@ window.onload = function(){
     screensHeightInit();    // lis 屏 初始化 height
     window.onresize = windowResize;    // 处理 浏览器缩放
     LoadingAnimation();    // 开机动画
+    musicBind();    // 音乐播放
     screenSwitch(1, callBack);    // 屏幕切到第 1 屏
     
     navClick();    // 导航点击 切屏
