@@ -80,9 +80,11 @@ function musicBind() {
     musicBox.addEventListener("click", function(){
         if(myMusic.paused){
             myMusic.play();
+            musicBox.style.backgroundImage = "url('./img/musicon.gif')";
         }else{
             myMusic.pause();
             myMusic.currentTime = 0;
+            musicBox.style.backgroundImage = "url('./img/musicoff.gif')";
         };
     }, false);
 };
